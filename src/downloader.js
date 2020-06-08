@@ -50,6 +50,10 @@ function getBaseImage(){
     if(window.location.href.indexOf("/video/") != -1){
       saveTikTok();
     }
+  }else if(window.location.href.toLocaleLowerCase().indexOf("zdf") != -1){
+    // TikTok integration.
+    console.log("ZDF");
+    saveTikTok();
   }
 }
 
