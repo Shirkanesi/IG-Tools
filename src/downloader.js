@@ -51,14 +51,23 @@ function getBaseImage(){
       saveTikTok();
     }
   }else if(window.location.href.toLocaleLowerCase().indexOf("zdf") != -1){
-    // TikTok integration.
+    // TikTok integration can also be used for this purpose.
+    // Have fun with it @fafa_60
     console.log("ZDF");
     saveTikTok();
   }
 }
 
 function saveTikTok(){
-  window.open(document.getElementsByTagName("video")[0].src, "_blank");
+  if(document.getElementsByTagName("video")[0] != undefined){
+    if(document.getElementsByTagName('video')[0].src.indexOf("blob:") == -1){
+      window.open(document.getElementsByTagName("video")[0].src, "_blank");
+    }else{
+      alert("Dieses Video kann leider nicht heruntergeladen werden :(");
+    }
+  }else{
+    alert("Leider konnte kein Video gefunden werden ¯\\_(ツ)_/¯");
+  }
 }
 
 function saveStory(){
@@ -103,26 +112,18 @@ function saveStoryHighlights(){
   request.send(null);
   let toOpen = [];
   if (request.status === 200) {
-    //console.log(request.responseText);
     let json = JSON.parse(request.responseText);
     let url = "";
     console.log(json, storyId);
     for(item of json.data.reels_media[0].items){
-      //if(item.id == storyId){
-        if(item.is_video){
-          url = item.video_resources[item.video_resources.length-1].src;
-        }else{
-          url = item.display_resources[item.display_resources.length-1].src;
-        }
-      //}
+      if(item.is_video){
+        url = item.video_resources[item.video_resources.length-1].src;
+      }else{
+        url = item.display_resources[item.display_resources.length-1].src;
+      }
       toOpen.push(url);
     }
-    //if(confirm("Durch einen Klick auf \"OK\" bist du damit einverstanden, dass " + toOpen.length + " Tabs geöffnet werden!")){
-      //for(url_ of toOpen){
-      //  window.open(url_, "_blank");
-      //}
-      buildSelector(toOpen);
-    //}
+    buildSelector(toOpen);
   }
 }
 
@@ -137,36 +138,27 @@ function saveStoryHashtag(){
   request.send(null);
   let toOpen = [];
   if (request.status === 200) {
-    //console.log(request.responseText);
     let json = JSON.parse(request.responseText);
     let url = "";
     console.log("Hashtag", json, storyId);
     for(item of json.data.reels_media[0].items){
-      //if(item.id == storyId){
-        if(item.is_video){
-          url = item.video_resources[item.video_resources.length-1].src;
-        }else{
-          url = item.display_resources[item.display_resources.length-1].src;
-        }
-      //}
+      if(item.is_video){
+        url = item.video_resources[item.video_resources.length-1].src;
+      }else{
+        url = item.display_resources[item.display_resources.length-1].src;
+      }
       toOpen.push(url);
     }
-    //if(confirm("Durch einen Klick auf \"OK\" bist du damit einverstanden, dass " + toOpen.length + " Tabs geöffnet werden!")){
-      //for(url_ of toOpen){
-      //  window.open(url_, "_blank");
-      //}
-      buildSelector(toOpen.reverse());
-    //}
+    buildSelector(toOpen.reverse());
   }
 }
 
 function getUserId(userName){
   var request = new XMLHttpRequest();
-  request.open('GET', 'https://www.instagram.com/'+userName+'/?__a=1', false);  // `false` makes the request synchronous
+  request.open('GET', 'https://www.instagram.com/'+userName+'/?__a=1', false);
   request.send(null);
 
   if (request.status === 200) {
-    //console.log(request.responseText);
     let json = JSON.parse(request.responseText);
     return json.logging_page_id.split("_")[1];
   }
@@ -174,7 +166,6 @@ function getUserId(userName){
 }
 
 function buildSelector(urlList){
-  //let html = '<!DOCTYPE html><html lang="de" dir="ltr"><head><meta charset="utf-8"><title>Instagram-Downloader</title><style media="screen">.wrapper {display: grid;grid-template-columns: repeat(3, 1fr);grid-gap: 10px;grid-auto-rows: minmax(100px, auto);}</style></head><body><div class="wrapper">';
   let html = "<title>Post-Downloader by Julian</title>";
   for(url_ of urlList.reverse()){
     if(url_.indexOf(".mp4") != -1){
@@ -185,20 +176,16 @@ function buildSelector(urlList){
       html += '<a href="'+url_+'" target="_blank"><img src="'+url_+'" width="360" /></a>';
     }
   }
-  //html += '</div></body></html>';
-  console.log(html);
+  // console.log(html);
   w = window.open("selector.html");
   w.onload = function(){
-  w.document.write(html);
-
-  let vids = w.document.getElementsByTagName("video");
-  for(vid of vids){
-    vid.volume = 0;
-    vid.loop = true;
-    vid.play();
-  }
-    //w.document.write("<b>hi</b>");
-
+    w.document.write(html);
+    let vids = w.document.getElementsByTagName("video");
+    for(vid of vids){
+      vid.volume = 0;
+      vid.loop = true;
+      vid.play();
+    }
   }
 }
 
