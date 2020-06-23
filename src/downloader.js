@@ -41,6 +41,8 @@ function getBaseImage(){
       saveStoryHashtag();
     }else if(window.location.href.indexOf("/stories/") != -1){
       saveStory();
+    }else if(window.location.href.indexOf("/direct/") != -1){
+      saveDirectMessage();
     }else{
       alert("Bitte erst ein Bild anklicken!");
       return;
@@ -55,6 +57,14 @@ function getBaseImage(){
     // Have fun with it @fafa_60
     console.log("ZDF");
     saveTikTok();
+  }
+}
+
+function saveDirectMessage(){
+  if(document.getElementsByClassName("m5WL8").length != 0){
+    window.open(document.getElementsByClassName("m5WL8")[0].children[0].src, "_blank");
+  }else{
+    window.open(document.getElementsByClassName("_3axN1")[0].src, "_blank");
   }
 }
 
@@ -189,4 +199,6 @@ function buildSelector(urlList){
   }
 }
 
+
+// start everything
 getBaseImage();
